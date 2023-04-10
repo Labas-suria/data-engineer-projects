@@ -1,0 +1,53 @@
+services:
+  Elasticsearch:
+    image: elasticsearch:${ELASTIC_VERSION}
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data/
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      discovery.type: single-node
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    networks:
+      - elk
+
+  Logstash:
+    image: logstash:${ELASTIC_VERSION}
+    container_name: logstash
+    restart: always
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+      - ./data/twitterdata/:/data/twitterdata/
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - Elasticsearch
+    ports:
+      - '9600:9600'
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+
+  Kibana:
+    image: kibana:${ELASTIC_VERSION}
+    container_name: kibana
+    restart: always
+    ports:
+      - '5601:5601'
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+      - Elasticsearch
+    networks:
+      - elk
+volumes:
+  elastic_data: {}
+
+networks:
+  elk:
