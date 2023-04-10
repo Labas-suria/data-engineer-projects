@@ -1,0 +1,1 @@
+docker build --build-arg aws_default_region="$AWS_DEFAULT_REGION" --build-arg aws_access_key_id="$AWS_ACCESS_KEY_ID" --build-arg aws_secret_access_key="$AWS_SECRET_ACCESS_KEY" -t felipenoug/deploy_container:latest .

@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Buildando image') {
+            steps {
+                sh "./buildando_imagem.sh"
+            }
+        }
+        stage('Run container') {
+            steps {
+                sh "./executando_container.sh"
+            }
+        }
+        stage('Remove container') {
+            steps {
+                sh "./remover_container.sh"
+            }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
