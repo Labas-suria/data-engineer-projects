@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Terraform init') {
+            steps {
+                sh "./terraform_init.sh"
+            }
+        }
+         stage('Terraform plan') {
+            steps {
+                sh "./terraform_plan.sh"
+            }
+        }
+        stage('Terraform apply to deploy app in EC2') {
+            steps {
+                sh "./terraform_apply.sh"
+            }
+        }
+        stage('Terraform destroy infra') {
+            steps {
+                sh "./terraform_destroy.sh"
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
