@@ -1,0 +1,2 @@
+Não sendo possível a execução do código junto com o Jenkins em uma máquina t2.micro,
+feitos os testes, chegou-se a conclusão que uma t2.small seria suficiente para executar a aplicação. 
